@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MinimalChatApp.Context;
+using MinimalChatApp.Models;
 
 namespace MinimalChatApp
 {
@@ -11,7 +12,7 @@ namespace MinimalChatApp
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+            builder.Services.AddIdentity<User, IdentityRole>()
                .AddEntityFrameworkStores<ApplicationDbContext>()
                .AddDefaultTokenProviders();
 
