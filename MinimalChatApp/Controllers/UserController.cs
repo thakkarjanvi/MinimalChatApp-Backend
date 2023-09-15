@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -95,7 +96,7 @@ namespace MinimalChatApp.Controllers
             }
 
             // Generate and return a JWT token
-            var token = GenerateJwtToken(user.Email);
+            var token = GenerateJwtToken(user);
 
             return Ok(new { message = "Login successfully done", token,
                 profile = new
@@ -107,16 +108,15 @@ namespace MinimalChatApp.Controllers
             });
         }
 
-        private string GenerateJwtToken(string email)
+        private string GenerateJwtToken(User user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.Email, email),
-                //new Claim(ClaimTypes.NameIdentifier, userId),
-                // Add other claims as needed (e.g., user ID)
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
             };
 
             var token = new JwtSecurityToken(
@@ -130,5 +130,30 @@ namespace MinimalChatApp.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
+        // Retrieve User List 
+        [HttpGet("users")]
+        [Authorize] // Requires authentication to access this endpoint
+        public async Task<IActionResult> GetUsers()
+        {
+            try
+            {
+                // Retrieve the list of users (excluding the current user)
+                var currentUser = _userManager.GetUserAsync(User).Result; // Get the current user
+                var users = _userManager.Users.Where(u => u.Id != currentUser.Id)
+                    .Select(u => new
+                    {
+                        id = u.Id,
+                        name = u.FullName,
+                        email = u.Email
+                    })
+                    .ToList();
+
+                return Ok(new { message = "User Retrive List successfully done", users });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
     }
 }
