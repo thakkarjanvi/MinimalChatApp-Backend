@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "oW+udrwbctaPKgBIhx/V3+fdDyh0jf3PcNdNvfGEAeEX/GY6Rbq8XTPT9de/nz+qy9x4p9BX57KdECypGwe7/w==",
+  "dgSpecHash": "wt19CWrM6TxU7K+VHcJyobDboyMrH9gO+OCy0FDAlSKUoLu5RXBte9n3bXhtxwn6iAFYsUW+0OzSIHBodCiNSw==",
   "success": true,
   "projectFilePath": "C:\\Users\\admin\\Documents\\Internship\\MinimalChatApp-Backend\\MinimalChatApp\\MinimalChatApp\\MinimalChatApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\admin\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\admin\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
     "C:\\Users\\admin\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
+    "C:\\Users\\admin\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\6.0.22\\microsoft.aspnetcore.authentication.jwtbearer.6.0.22.nupkg.sha512",
     "C:\\Users\\admin\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\6.0.22\\microsoft.aspnetcore.cryptography.internal.6.0.22.nupkg.sha512",
     "C:\\Users\\admin\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\6.0.22\\microsoft.aspnetcore.cryptography.keyderivation.6.0.22.nupkg.sha512",
     "C:\\Users\\admin\\.nuget\\packages\\microsoft.aspnetcore.identity.entityframeworkcore\\6.0.22\\microsoft.aspnetcore.identity.entityframeworkcore.6.0.22.nupkg.sha512",

@@ -1,7 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using MinimalChatApp.Context;
 using MinimalChatApp.Models;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace MinimalChatApp.Controllers
 {
@@ -12,12 +17,14 @@ namespace MinimalChatApp.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ApplicationDbContext _dbcontext;
+        private readonly IConfiguration _configuration;
 
-        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, ApplicationDbContext dbContext)
+        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, ApplicationDbContext dbContext, IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _dbcontext = dbContext;
+            _configuration = configuration;
         }
 
         // Register
@@ -43,6 +50,7 @@ namespace MinimalChatApp.Controllers
             {
             
             Email = request.Email,
+            UserName = request.Email,
             FullName = request.Name,
             };
 
@@ -68,5 +76,59 @@ namespace MinimalChatApp.Controllers
                 return BadRequest(new { error = "User creation failed" });
             }
         }
+
+        // Login
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] Login model)
+        {
+            // Validate the model
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new { error = "Login failed due to validation errors" });
+            }
+
+            // Authenticate the user
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password))
+            {
+                return Unauthorized(new { error = "Login failed due to incorrect credentials" });
+            }
+
+            // Generate and return a JWT token
+            var token = GenerateJwtToken(user.Email);
+
+            return Ok(new { message = "Login successfully done", token,
+                profile = new
+                {
+                    id = user.Id,
+                    name = user.FullName,
+                    email = user.Email
+                }
+            });
+        }
+
+        private string GenerateJwtToken(string email)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.Email, email),
+                //new Claim(ClaimTypes.NameIdentifier, userId),
+                // Add other claims as needed (e.g., user ID)
+            };
+
+            var token = new JwtSecurityToken(
+                _configuration["JwtSettings:Issuer"],
+                _configuration["JwtSettings:Audience"],
+                claims,
+                expires: DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["JwtSettings:DurationInMinutes"])),
+                signingCredentials: credentials
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
     }
 }
