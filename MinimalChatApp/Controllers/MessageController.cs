@@ -126,5 +126,50 @@ namespace MinimalChatApp.Controllers
             }
         }
 
+        // Delete Message
+
+        [HttpDelete("messages/{messageId}")]
+        public async Task<IActionResult> DeleteMessage(int messageId)
+        {
+            try
+            {
+                // Get the authenticated user's ID from the token
+                var senderId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (string.IsNullOrWhiteSpace(senderId))
+                {
+                    return Unauthorized(new { error = "Unauthorized access" });
+                }
+
+                // Convert the messageId (integer) to a Guid
+                // var messageGuid = new Guid(messageId.ToString());
+
+                // Find the message to delete in the database
+                var messageToDelete = await _dbcontext.Messages.FirstOrDefaultAsync(m => m.MessageId == messageId);
+
+                if (messageToDelete == null)
+                {
+                    return NotFound(new { error = "Message not found" });
+                }
+
+                // Check if the authenticated user is the sender of the message
+                if (!messageToDelete.SenderId.Equals(new Guid(senderId)))
+                {
+                    return Unauthorized(new { error = "You are not authorized to delete this message" });
+                }
+
+                // Remove the message from the database
+                _dbcontext.Messages.Remove(messageToDelete);
+                await _dbcontext.SaveChangesAsync();
+
+                // Return a successful response
+                return Ok(new { Message = "Message deleted successfully" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { error = ex.Message });
+            }
+        }
+
     }
 }
