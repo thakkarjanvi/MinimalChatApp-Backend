@@ -8,6 +8,7 @@ C:\Users\admin\Documents\Internship\MinimalChatApp-Backend\MinimalChatApp\Minima
 C:\Users\admin\Documents\Internship\MinimalChatApp-Backend\MinimalChatApp\MinimalChatApp\bin\Debug\net6.0\Azure.Core.dll
 C:\Users\admin\Documents\Internship\MinimalChatApp-Backend\MinimalChatApp\MinimalChatApp\bin\Debug\net6.0\Azure.Identity.dll
 C:\Users\admin\Documents\Internship\MinimalChatApp-Backend\MinimalChatApp\MinimalChatApp\bin\Debug\net6.0\Humanizer.dll
+C:\Users\admin\Documents\Internship\MinimalChatApp-Backend\MinimalChatApp\MinimalChatApp\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\admin\Documents\Internship\MinimalChatApp-Backend\MinimalChatApp\MinimalChatApp\bin\Debug\net6.0\Microsoft.AspNetCore.Cryptography.Internal.dll
 C:\Users\admin\Documents\Internship\MinimalChatApp-Backend\MinimalChatApp\MinimalChatApp\bin\Debug\net6.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
 C:\Users\admin\Documents\Internship\MinimalChatApp-Backend\MinimalChatApp\MinimalChatApp\bin\Debug\net6.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
@@ -90,4 +91,3 @@ C:\Users\admin\Documents\Internship\MinimalChatApp-Backend\MinimalChatApp\Minima
 C:\Users\admin\Documents\Internship\MinimalChatApp-Backend\MinimalChatApp\MinimalChatApp\obj\Debug\net6.0\MinimalChatApp.pdb
 C:\Users\admin\Documents\Internship\MinimalChatApp-Backend\MinimalChatApp\MinimalChatApp\obj\Debug\net6.0\MinimalChatApp.genruntimeconfig.cache
 C:\Users\admin\Documents\Internship\MinimalChatApp-Backend\MinimalChatApp\MinimalChatApp\obj\Debug\net6.0\ref\MinimalChatApp.dll
-C:\Users\admin\Documents\Internship\MinimalChatApp-Backend\MinimalChatApp\MinimalChatApp\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
