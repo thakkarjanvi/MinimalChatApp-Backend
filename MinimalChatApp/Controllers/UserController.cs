@@ -155,5 +155,6 @@ namespace MinimalChatApp.Controllers
                 return BadRequest(new { error = ex.Message });
             }
         }
+
     }
 }
