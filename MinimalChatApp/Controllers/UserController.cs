@@ -148,7 +148,7 @@ namespace MinimalChatApp.Controllers
                     })
                     .ToList();
 
-                return Ok(new { message = "User Retrive List successfully done", users });
+                return Ok(new { message = "User Retrieve List successfully done", users });
             }
             catch (Exception ex)
             {
