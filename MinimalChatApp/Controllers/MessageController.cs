@@ -141,8 +141,6 @@ namespace MinimalChatApp.Controllers
                     return Unauthorized(new { error = "Unauthorized access" });
                 }
 
-                // Convert the messageId (integer) to a Guid
-                // var messageGuid = new Guid(messageId.ToString());
 
                 // Find the message to delete in the database
                 var messageToDelete = await _dbcontext.Messages.FirstOrDefaultAsync(m => m.MessageId == messageId);
@@ -171,5 +169,78 @@ namespace MinimalChatApp.Controllers
             }
         }
 
+        // Retrieve Conversation History 
+        [HttpGet("messages")]
+        public async Task<IActionResult> RetrieveConversationHistory(
+            [FromQuery] Guid userId,
+            [FromQuery] DateTime? before = null,
+            [FromQuery] int count = 20,
+            [FromQuery] string sort = "asc")
+        {
+            try
+            {
+                // Get the authenticated user's ID from the token
+                var senderId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (string.IsNullOrWhiteSpace(senderId))
+                {
+                    return Unauthorized(new { error = "Unauthorized access" });
+                }
+
+                // Find the user in the database
+                var user = await _dbcontext.Users.FirstOrDefaultAsync(u => u.Id == userId.ToString());
+
+                if (user == null)
+                {
+                    return NotFound(new { error = "User not found" });
+                }
+
+                // Check if the authenticated user is authorized to retrieve this conversation
+                if (user.Id != new Guid(senderId).ToString())
+                {
+                    return Unauthorized(new { error = "You are not authorized to retrieve this conversation" });
+                }
+
+                // Retrieve conversation messages based on the provided parameters
+                var messagesQuery = _dbcontext.Messages
+                    .Where(m => (m.SenderId == new Guid(senderId) && m.ReceiverId == userId) ||
+                                (m.SenderId == userId && m.ReceiverId == new Guid(senderId)));
+
+                if (before.HasValue)
+                {
+                    messagesQuery = messagesQuery.Where(m => m.Timestamp < before);
+                }
+
+                if (sort == "asc")
+                {
+                    messagesQuery = messagesQuery.OrderBy(m => m.Timestamp);
+                }
+                else
+                {
+                    messagesQuery = messagesQuery.OrderByDescending(m => m.Timestamp);
+                }
+
+                var conversationMessages = await messagesQuery.Take(count).ToListAsync();
+
+                // Prepare the response body
+                var response = new
+                {
+                    messages = conversationMessages.Select(m => new
+                    {
+                        id = m.MessageId,
+                        senderId = m.SenderId,
+                        receiverId = m.ReceiverId,
+                        content = m.Content,
+                        timestamp = m.Timestamp
+                    })
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new { error = ex.Message });
+            }
+        }
     }
 }
