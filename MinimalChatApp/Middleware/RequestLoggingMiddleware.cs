@@ -24,7 +24,7 @@ namespace MinimalChatApp.Middleware
                 var requestBody = await ReadRequestBodyAsync(context.Request);
 
                 // Get the current timestamp
-                var currentTime = DateTime.UtcNow;
+                var currentTime = DateTime.Now;
 
                 // Extract the username from the authentication token if available
                 var username = context.User.Identity?.Name ?? "No Auth Token";
