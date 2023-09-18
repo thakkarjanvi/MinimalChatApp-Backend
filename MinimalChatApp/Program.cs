@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MinimalChatApp.Context;
+using MinimalChatApp.Middleware;
 using MinimalChatApp.Models;
 using System.Text;
 
@@ -95,6 +96,9 @@ namespace MinimalChatApp
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            // Request Logging Middleware
+            app.UseMiddleware<RequestLoggingMiddleware>();
 
             app.MapControllers();
 
