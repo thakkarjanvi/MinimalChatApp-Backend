@@ -13,5 +13,7 @@ namespace MinimalChatApp.Context
         } 
         public DbSet<Message> Messages { get; set; }
 
+        public DbSet<Log> LogEntries { get; set; }
+
     }
 }

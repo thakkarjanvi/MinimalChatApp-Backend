@@ -195,12 +195,6 @@ namespace MinimalChatApp.Controllers
                     return NotFound(new { error = "User not found" });
                 }
 
-                // Check if the authenticated user is authorized to retrieve this conversation
-                if (user.Id != new Guid(senderId).ToString())
-                {
-                    return Unauthorized(new { error = "You are not authorized to retrieve this conversation" });
-                }
-
                 // Retrieve conversation messages based on the provided parameters
                 var messagesQuery = _dbcontext.Messages
                     .Where(m => (m.SenderId == new Guid(senderId) && m.ReceiverId == userId) ||
